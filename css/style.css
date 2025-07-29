@@ -1,0 +1,38 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  /* outline: 1px solid tomato; */
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+  vertical-align: top;
+}
+
+button,
+input[type="submit"] {
+  display: inline-block;
+}
+
+button,
+input[type="submit"],
+label {
+  cursor: pointer;
+}
+
+.section {
+  padding-top: 12px;
+  padding-bottom: 12px;
+}
+
+.container {
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 8px;
+  padding-right: 8px;
+
+  width: 720px;
+}
