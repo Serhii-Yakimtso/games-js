@@ -13,12 +13,17 @@ main,
   flex-grow: 1;
 }
 
+.header-wrapper {
+  display: flex;
+  justify-content: space-between;
+}
+
 .flex-wrapper {
   height: 100%;
 }
 
 .area {
-  /* width: 100%; */
+  position: relative;
   flex-grow: 1;
   height: 100%;
   border: 1px solid #ccc;
@@ -32,4 +37,36 @@ main,
   background-color: beige;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.start-btn {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.hidden {
+  display: none;
+}
+
+.click-element {
+  position: absolute;
+  z-index: 999;
+  width: 10px;
+  height: 10px;
+  background-color: lightblue;
+  border-radius: 50%;
+  cursor: pointer;
+
+  animation: scale-element 3s ease-out 1 forwards;
+}
+
+@keyframes scale-element {
+  from {
+    transform: scale(1);
+  }
+  to {
+    transform: scale(10);
+  }
 }

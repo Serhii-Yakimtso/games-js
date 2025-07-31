@@ -2,7 +2,10 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0"
+    />
     <title>Mouse clicker</title>
 
     <link rel="stylesheet" href="../../css/normalize.css" />
@@ -13,7 +16,11 @@
   <body>
     <header class="header">
       <div class="container">
-        <nav><a href="../index.html" class="btn">Go Back</a></nav>
+        <div class="header-wrapper">
+          <nav id="nav">
+            <a href="../index.html" class="btn">Go Back</a>
+          </nav>
+        </div>
       </div>
     </header>
     <main>
@@ -22,13 +29,15 @@
           <h1 class="main-title">Mouse clicker</h1>
 
           <div class="flex-wrapper">
-            <div class="area"></div>
-            <div class="results">
+            <div id="area" class="area"></div>
+            <div id="results" class="results">
               <h2>Results</h2>
             </div>
           </div>
         </div>
       </section>
     </main>
+
+    <script type="module" src="./main.js"></script>
   </body>
 </html>
