@@ -6,7 +6,16 @@ const nav = document.querySelector('#nav');
 
 let startBtn = null;
 let newBtn = null;
+
+// Лічильник
 let counter = 0;
+
+// максимальний радіус елемента
+const maxRadius = 50;
+// Розмір ігрового поля
+const areaSize = {};
+// Координати елементу
+const positionClickElement = {};
 
 // Рендер елементів
 const startBtnMarkUp =
@@ -18,7 +27,7 @@ const newtBtnMarkUp =
 const handleStartGame = () => {
   deleteStartBtn();
   createNewBtn();
-  createClickElement();
+  createClickElement(positionClickElement);
 };
 
 function createStartBtn() {
@@ -63,3 +72,55 @@ function deleteNewBtn() {
 }
 
 createStartBtn();
+
+// Визначення розміру екрану
+function getAreaSize() {
+  const areaWidth = area.clientWidth;
+  const areaHeight = area.clientHeight;
+
+  areaSize.width = areaWidth;
+  areaSize.height = areaHeight;
+}
+
+getAreaSize();
+
+function generatePosition(size, radius) {
+  const { width, height } = size;
+
+  const maxX = Math.ceil(width - radius);
+  const maxY = Math.floor(height - radius);
+
+  const x =
+    Math.floor(Math.random() * (maxX - radius + 1)) +
+    radius;
+  const y =
+    Math.floor(Math.random() * (maxY - radius + 1)) +
+    radius;
+
+  positionClickElement.left = x;
+  positionClickElement.top = y;
+}
+
+// Створення елементу кліку
+function createClickElement(position) {
+  generatePosition(areaSize, maxRadius);
+
+  const { left, top } = position;
+
+  const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
+
+  area.innerHTML = clickElementMarkUp;
+  console.log('create');
+
+  const clickElement = document.querySelector(
+    '#click-element'
+  );
+
+  const handleClick = () => {
+    clickElement.remove();
+
+    counter += 1;
+  };
+
+  clickElement.addEventListener('click', handleClick);
+}
