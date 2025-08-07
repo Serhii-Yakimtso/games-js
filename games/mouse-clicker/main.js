@@ -2,6 +2,7 @@
 
 const area = document.querySelector('#area');
 const results = document.querySelector('#results');
+const counterResults = document.querySelector('#counter');
 const nav = document.querySelector('#nav');
 
 let startBtn = null;
@@ -28,6 +29,7 @@ const handleStartGame = () => {
   deleteStartBtn();
   createNewBtn();
   createClickElement(positionClickElement);
+  updateResults(counterResults, counter);
 };
 
 function createStartBtn() {
@@ -110,7 +112,6 @@ function createClickElement(position) {
   const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
 
   area.innerHTML = clickElementMarkUp;
-  console.log('create');
 
   const clickElement = document.querySelector(
     '#click-element'
@@ -120,7 +121,14 @@ function createClickElement(position) {
     clickElement.remove();
 
     counter += 1;
+    updateResults(counterResults, counter);
+
+    createClickElement(positionClickElement);
   };
 
   clickElement.addEventListener('click', handleClick);
+}
+
+function updateResults(element, value) {
+  element.textContent = value;
 }
