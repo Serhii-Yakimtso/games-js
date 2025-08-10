@@ -1,27 +1,32 @@
 'use strict';
 
-const area = document.querySelector('#area');
-const results = document.querySelector('#results');
-const counterResults = document.querySelector('#counter');
-const timeToClick = document.querySelector('#time');
-const totalTimeGame = document.querySelector('#total-time');
-const speedResults = document.querySelector('#speed');
-const minTimeResults = document.querySelector('#min-time');
-const maxTimeResults = document.querySelector('#max-time');
-const meanTimeResults =
+const areaElement = document.querySelector('#area');
+const resultsElement = document.querySelector('#results');
+const counterResultsElement =
+  document.querySelector('#counter');
+const timeToClickElement = document.querySelector('#time');
+const totalTimeGameElement =
+  document.querySelector('#total-time');
+const speedResultsElement =
+  document.querySelector('#speed');
+const minTimeResultsElement =
+  document.querySelector('#min-time');
+const maxTimeResultsElement =
+  document.querySelector('#max-time');
+const meanTimeResultsElement =
   document.querySelector('#mean-time');
-const nav = document.querySelector('#nav');
 
-let startBtn = null;
-let newBtn = null;
+let startBtnElement = null;
+let newBtnElement = null;
 
-// Лічильник
-let counter = 0;
+// Лічильники
+let clickCounter = 0;
 let totalTime = 0;
 let totalTimeLimit = 5;
-let startTime = 0;
-let endTime = 0;
-let speedTime = 0;
+let clickStartTime = 0;
+let clickEndTime = 0;
+let clickSpeedTime = 0;
+
 const arrTime = [];
 
 // максимальний радіус елемента
@@ -43,56 +48,62 @@ const handleStartGame = () => {
   createNewBtn();
   createClickElement(positionClickElement);
   getTotalTimeGame();
-  updateResults(counterResults, counter);
+  updateResults(counterResultsElement, clickCounter);
 };
 
 function createStartBtn() {
-  area.innerHTML = startBtnMarkUp;
+  areaElement.innerHTML = startBtnMarkUp;
 
-  startBtn = document.querySelector('#start-btn');
+  startBtnElement = document.querySelector('#start-btn');
 
-  startBtn.addEventListener('click', handleStartGame);
+  startBtnElement.addEventListener(
+    'click',
+    handleStartGame
+  );
 }
 
 // Видалення кнопки "Start Game"
 function deleteStartBtn() {
-  startBtn.removeEventListener('click', handleStartGame);
+  startBtnElement.removeEventListener(
+    'click',
+    handleStartGame
+  );
 
-  startBtn.remove();
+  startBtnElement.remove();
 
-  startBtn = null;
+  startBtnElement = null;
 }
 
 // Рендер кнопки "New Game"
 const handleNewGame = () => {
   createStartBtn();
   deleteNewBtn();
-  counter = 0;
+  clickCounter = 0;
 };
 
 function createNewBtn() {
   nav.insertAdjacentHTML('afterend', newtBtnMarkUp);
 
-  newBtn = document.querySelector('#new-btn');
+  newBtnElement = document.querySelector('#new-btn');
 
-  newBtn.addEventListener('click', handleNewGame);
+  newBtnElement.addEventListener('click', handleNewGame);
 }
 
 // Видалення кнопки "New Game"
 function deleteNewBtn() {
-  newBtn.removeEventListener('click', handleNewGame);
+  newBtnElement.removeEventListener('click', handleNewGame);
 
-  newBtn.remove();
+  newBtnElement.remove();
 
-  newBtn = null;
+  newBtnElement = null;
 }
 
 createStartBtn();
 
 // Визначення розміру екрану
 function getAreaSize() {
-  const areaWidth = area.clientWidth;
-  const areaHeight = area.clientHeight;
+  const areaWidth = areaElement.clientWidth;
+  const areaHeight = areaElement.clientHeight;
 
   areaSize.width = areaWidth;
   areaSize.height = areaHeight;
@@ -125,28 +136,32 @@ function createClickElement(position) {
 
   const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
 
-  area.innerHTML = clickElementMarkUp;
-  startTime = getTime();
+  areaElement.innerHTML = clickElementMarkUp;
+  clickStartTime = getTime();
 
   const clickElement = document.querySelector(
     '#click-element'
   );
 
   const handleClick = () => {
-    endTime = getTime();
+    clickEndTime = getTime();
 
-    speedTime = getSpeedTime(startTime, endTime);
-    pushTime(arrTime, speedTime);
+    clickSpeedTime = getSpeedTime(
+      clickStartTime,
+      clickEndTime
+    );
+    pushTime(arrTime, clickSpeedTime);
 
-    speedResults.textContent = speedTime;
-    minTimeResults.textContent = getMinTime(arrTime);
-    maxTimeResults.textContent = getMaxTime(arrTime);
-    meanTimeResults.textContent = getMeanTime(arrTime);
+    speedResultsElement.textContent = clickSpeedTime;
+    minTimeResultsElement.textContent = getMinTime(arrTime);
+    maxTimeResultsElement.textContent = getMaxTime(arrTime);
+    meanTimeResultsElement.textContent =
+      getMeanTime(arrTime);
 
     clickElement.remove();
 
-    counter += 1;
-    updateResults(counterResults, counter);
+    clickCounter += 1;
+    updateResults(counterResultsElement, clickCounter);
 
     createClickElement(positionClickElement);
   };
@@ -223,7 +238,7 @@ function getTotalTimeGame() {
       clearInterval(countTime);
     }
 
-    totalTimeGame.textContent = totalTime;
+    totalTimeGameElement.textContent = totalTime;
   }, 100);
 }
 
