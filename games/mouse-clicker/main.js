@@ -1,5 +1,6 @@
 'use strict';
 
+// Отримання
 const areaElement = document.querySelector('#area');
 const resultsElement = document.querySelector('#results');
 const counterResultsElement =
@@ -16,15 +17,23 @@ const maxTimeResultsElement =
 const meanTimeResultsElement =
   document.querySelector('#mean-time');
 
+// кнопка початку гри
 let startBtnElement = null;
-let newBtnElement = null;
+// кнопка нової гри
+let restartBtnElement = null;
 
-// Лічильники
+// Статус гри
+let gameStatus = false;
+
+// Лічильник кліків
 let clickCounter = 0;
+// Лічильник загального часу гри
 let totalTime = 0;
+// Лічильник  часу до кліку по елементу
+let timeToClick = 0;
+// Максимальний ліміт часу гри
 let totalTimeLimit = 5;
-let clickStartTime = 0;
-let clickEndTime = 0;
+// Час (швидкість) реагування
 let clickSpeedTime = 0;
 
 const arrTime = [];
@@ -33,24 +42,27 @@ const arrTime = [];
 const maxRadius = 50;
 // Розмір ігрового поля
 const areaSize = {};
-// Координати елементу
+// Координати створення елементу
 const positionClickElement = {};
 
 // Рендер елементів
 const startBtnMarkUp =
   "<button type='button' id='start-btn' class='start-btn btn'>Start Game</button>";
-const newtBtnMarkUp =
-  "<button type='button' id='new-btn' class='new-btn btn'>New Game</button>";
+const restartBtnMarkUp =
+  "<button type='button' id='restart-btn' class='new-btn btn'>Restart Game</button>";
 
 // Рендер кнопки "Start Game"
 const handleStartGame = () => {
   deleteStartBtn();
-  createNewBtn();
+  createRestartBtn();
   createClickElement(positionClickElement);
   getTotalTimeGame();
   updateResults(counterResultsElement, clickCounter);
+
+  gameStatus = true;
 };
 
+// Створення кнопки "Start Game"
 function createStartBtn() {
   areaElement.innerHTML = startBtnMarkUp;
 
@@ -74,28 +86,36 @@ function deleteStartBtn() {
   startBtnElement = null;
 }
 
-// Рендер кнопки "New Game"
-const handleNewGame = () => {
+// Рендер кнопки "Restart Game"
+const handleRestartGame = () => {
   createStartBtn();
-  deleteNewBtn();
+  deleteRestartBtn();
   clickCounter = 0;
 };
 
-function createNewBtn() {
-  nav.insertAdjacentHTML('afterend', newtBtnMarkUp);
+// Рендер кнопки "Restart Game"
+function createRestartBtn() {
+  nav.insertAdjacentHTML('afterend', restartBtnMarkUp);
 
-  newBtnElement = document.querySelector('#new-btn');
+  restartBtnElement =
+    document.querySelector('#restart-btn');
 
-  newBtnElement.addEventListener('click', handleNewGame);
+  restartBtnElement.addEventListener(
+    'click',
+    handleRestartGame
+  );
 }
 
 // Видалення кнопки "New Game"
-function deleteNewBtn() {
-  newBtnElement.removeEventListener('click', handleNewGame);
+function deleteRestartBtn() {
+  restartBtnElement.removeEventListener(
+    'click',
+    handleRestartGame
+  );
 
-  newBtnElement.remove();
+  restartBtnElement.remove();
 
-  newBtnElement = null;
+  restartBtnElement = null;
 }
 
 createStartBtn();
@@ -111,6 +131,7 @@ function getAreaSize() {
 
 getAreaSize();
 
+// Генерація координат створення елементу
 function generatePosition(size, radius) {
   const { width, height } = size;
 
@@ -137,18 +158,20 @@ function createClickElement(position) {
   const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
 
   areaElement.innerHTML = clickElementMarkUp;
-  clickStartTime = getTime();
+  const createElementTime = getTime();
 
   const clickElement = document.querySelector(
     '#click-element'
   );
 
+  getTimeToClick();
+
   const handleClick = () => {
-    clickEndTime = getTime();
+    const clickTime = getTime();
 
     clickSpeedTime = getSpeedTime(
-      clickStartTime,
-      clickEndTime
+      createElementTime,
+      clickTime
     );
     pushTime(arrTime, clickSpeedTime);
 
@@ -169,11 +192,12 @@ function createClickElement(position) {
   clickElement.addEventListener('click', handleClick);
 }
 
+// оновлення значення елементу
 function updateResults(element, value) {
   element.textContent = value;
 }
 
-// Отримання часу подію
+// Отримання часу події
 function getTime() {
   const time = Date.now();
 
@@ -206,7 +230,7 @@ function getMeanTime(arr) {
   return Math.ceil(mean / arr.length);
 }
 
-// Отримання найшвидшого результату реагування
+// Отримання найшвидшого часу реагування
 function getMinTime(arr) {
   if (arr.length < 2) {
     return 0;
@@ -215,7 +239,7 @@ function getMinTime(arr) {
   return Math.min(...arr);
 }
 
-// Отримання найдовшого результату реагування
+// Отримання найдовшого часу реагування
 function getMaxTime(arr) {
   if (arr.length < 2) {
     return 0;
@@ -224,6 +248,7 @@ function getMaxTime(arr) {
   return Math.max(...arr);
 }
 
+// Отримання загального часу гри
 function getTotalTimeGame() {
   const startTimeGame = Date.now();
 
@@ -238,8 +263,30 @@ function getTotalTimeGame() {
       clearInterval(countTime);
     }
 
+    if (!gameStatus) {
+      clearInterval(countTime);
+    }
+
     totalTimeGameElement.textContent = totalTime;
   }, 100);
 }
 
-function getTimeToClick(params) {}
+function getTimeToClick() {
+  const createElementTime = Date.now();
+  const currentCount = clickCounter;
+
+  const countineTimeToClick = setInterval(() => {
+    timeToClick = (
+      Math.round(Date.now() - createElementTime) /
+      100 /
+      10
+    ).toFixed(1);
+
+    if (currentCount !== clickCounter) {
+      clearInterval(countineTimeToClick);
+      timeToClick = 0;
+    }
+
+    timeToClickElement.textContent = timeToClick;
+  });
+}
