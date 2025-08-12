@@ -62,6 +62,9 @@ const handleStartGame = () => {
   gameStatus = true;
 };
 
+createStartBtn();
+getAreaSize();
+
 // Створення кнопки "Start Game"
 function createStartBtn() {
   areaElement.innerHTML = startBtnMarkUp;
@@ -118,8 +121,6 @@ function deleteRestartBtn() {
   restartBtnElement = null;
 }
 
-createStartBtn();
-
 // Визначення розміру екрану
 function getAreaSize() {
   const areaWidth = areaElement.clientWidth;
@@ -128,8 +129,6 @@ function getAreaSize() {
   areaSize.width = areaWidth;
   areaSize.height = areaHeight;
 }
-
-getAreaSize();
 
 // Генерація координат створення елементу
 function generatePosition(size, radius) {
@@ -175,11 +174,22 @@ function createClickElement(position) {
     );
     pushTime(arrTime, clickSpeedTime);
 
-    speedResultsElement.textContent = clickSpeedTime;
-    minTimeResultsElement.textContent = getMinTime(arrTime);
-    maxTimeResultsElement.textContent = getMaxTime(arrTime);
-    meanTimeResultsElement.textContent =
-      getMeanTime(arrTime);
+    updateResults(speedResultsElement, clickSpeedTime);
+
+    updateResults(
+      minTimeResultsElement,
+      getMinTime(arrTime)
+    );
+
+    updateResults(
+      maxTimeResultsElement,
+      getMaxTime(arrTime)
+    );
+
+    updateResults(
+      meanTimeResultsElement,
+      getMeanTime(arrTime)
+    );
 
     clickElement.remove();
 
@@ -259,20 +269,22 @@ function getTotalTimeGame() {
       10
     ).toFixed(1);
 
-    if (totalTime > totalTimeLimit) {
+    updateResults(totalTimeGameElement, totalTime);
+
+    if (totalTime >= totalTimeLimit) {
       clearInterval(countTime);
     }
 
     if (!gameStatus) {
       clearInterval(countTime);
     }
-
-    totalTimeGameElement.textContent = totalTime;
   }, 100);
 }
 
+// Отримання  часу між кліками
 function getTimeToClick() {
   const createElementTime = Date.now();
+
   const currentCount = clickCounter;
 
   const countineTimeToClick = setInterval(() => {
@@ -287,6 +299,10 @@ function getTimeToClick() {
       timeToClick = 0;
     }
 
-    timeToClickElement.textContent = timeToClick;
-  });
+    updateResults(timeToClickElement, timeToClick);
+  }, 100);
 }
+
+function finishGame(params) {}
+
+function cleareResults(params) {}
