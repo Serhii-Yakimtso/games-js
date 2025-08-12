@@ -149,10 +149,10 @@ function generatePosition(size, radius) {
 }
 
 // Створення елементу кліку
-function createClickElement(position) {
+function createClickElement() {
   generatePosition(areaSize, maxRadius);
 
-  const { left, top } = position;
+  const { left, top } = positionClickElement;
 
   const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
 
@@ -264,9 +264,7 @@ function getTotalTimeGame() {
 
   const countTime = setInterval(() => {
     totalTime = (
-      Math.round(Date.now() - startTimeGame) /
-      100 /
-      10
+      Math.round(Date.now() - startTimeGame) / 1000
     ).toFixed(1);
 
     updateResults(totalTimeGameElement, totalTime);
@@ -289,17 +287,15 @@ function getTimeToClick() {
 
   const countineTimeToClick = setInterval(() => {
     timeToClick = (
-      Math.round(Date.now() - createElementTime) /
-      100 /
-      10
+      Math.round(Date.now() - createElementTime) / 1000
     ).toFixed(1);
+
+    updateResults(timeToClickElement, timeToClick);
 
     if (currentCount !== clickCounter) {
       clearInterval(countineTimeToClick);
       timeToClick = 0;
     }
-
-    updateResults(timeToClickElement, timeToClick);
   }, 100);
 }
 
