@@ -51,8 +51,11 @@ const startBtnMarkUp =
 const restartBtnMarkUp =
   "<button type='button' id='restart-btn' class='new-btn btn'>Restart Game</button>";
 
-// Рендер кнопки "Start Game"
 const handleStartGame = () => {
+  startNeGame();
+};
+
+function startNeGame() {
   deleteStartBtn();
   createRestartBtn();
   createClickElement(positionClickElement);
@@ -60,7 +63,7 @@ const handleStartGame = () => {
   updateResults(counterResultsElement, clickCounter);
 
   gameStatus = true;
-};
+}
 
 createStartBtn();
 getAreaSize();
@@ -89,12 +92,15 @@ function deleteStartBtn() {
   startBtnElement = null;
 }
 
-// Рендер кнопки "Restart Game"
 const handleRestartGame = () => {
+  restartGame();
+};
+
+function restartGame() {
   createStartBtn();
   deleteRestartBtn();
-  clickCounter = 0;
-};
+  cleareResults();
+}
 
 // Рендер кнопки "Restart Game"
 function createRestartBtn() {
@@ -172,6 +178,7 @@ function createClickElement() {
       createElementTime,
       clickTime
     );
+
     pushTime(arrTime, clickSpeedTime);
 
     updateResults(speedResultsElement, clickSpeedTime);
@@ -301,4 +308,19 @@ function getTimeToClick() {
 
 function finishGame(params) {}
 
-function cleareResults(params) {}
+function cleareResults() {
+  clickCounter = 0;
+  timeToClick = 0;
+  totalTime = 0;
+  clickSpeedTime = 0;
+
+  arrTime.splice(0, arrTime.length);
+
+  updateResults(counterResultsElement, clickCounter);
+  updateResults(timeToClickElement, timeToClick);
+  updateResults(totalTimeGameElement, totalTime);
+  updateResults(speedResultsElement, clickSpeedTime);
+  updateResults(minTimeResultsElement, 0);
+  updateResults(maxTimeResultsElement, 0);
+  updateResults(meanTimeResultsElement, 0);
+}
