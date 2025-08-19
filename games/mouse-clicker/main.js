@@ -97,9 +97,15 @@ const handleRestartGame = () => {
 };
 
 function restartGame() {
+  gameStatus = false;
+  createLocalHistoryObj();
   createStartBtn();
   deleteRestartBtn();
+  console.log('cleareResults - do');
+  console.log(meanTimeResultsElement.value);
+
   cleareResults();
+  console.log('cleareResults - done');
 }
 
 // Рендер кнопки "Restart Game"
@@ -278,6 +284,7 @@ function getTotalTimeGame() {
 
     if (totalTime >= totalTimeLimit) {
       clearInterval(countTime);
+      restartGame();
     }
 
     if (!gameStatus) {
@@ -299,6 +306,15 @@ function getTimeToClick() {
 
     updateResults(timeToClickElement, timeToClick);
 
+    // if (totalTime >= totalTimeLimit) {
+    //   clearInterval(countineTimeToClick);
+    //   restartGame();
+    // }
+
+    if (!gameStatus) {
+      clearInterval(countineTimeToClick);
+    }
+
     if (currentCount !== clickCounter) {
       clearInterval(countineTimeToClick);
       timeToClick = 0;
@@ -306,14 +322,7 @@ function getTimeToClick() {
   }, 100);
 }
 
-function finishGame(params) {}
-
 function cleareResults() {
-  clickCounter = 0;
-  timeToClick = 0;
-  totalTime = 0;
-  clickSpeedTime = 0;
-
   arrTime.splice(0, arrTime.length);
 
   updateResults(counterResultsElement, clickCounter);
@@ -323,4 +332,17 @@ function cleareResults() {
   updateResults(minTimeResultsElement, 0);
   updateResults(maxTimeResultsElement, 0);
   updateResults(meanTimeResultsElement, 0);
+}
+
+function createLocalHistoryObj() {
+  const obj = {};
+
+  obj.clickCounter = clickCounter;
+  obj.totalTime = totalTime;
+  obj.clickSpeedTime = clickSpeedTime;
+  obj.minTime = minTimeResultsElement.value;
+  obj.maxTime = maxTimeResultsElement.value;
+  obj.meanTime = meanTimeResultsElement.value;
+
+  console.log(obj);
 }
