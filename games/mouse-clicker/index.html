@@ -31,30 +31,81 @@
           <div class="flex-wrapper">
             <div id="area" class="area"></div>
             <div id="results" class="results">
-              <h2>Results</h2>
-              <p>Counter: <span id="counter">0</span></p>
-              <p>
-                Total time <span id="total-time">0</span> s
-              </p>
-              <p>
-                Time to click <span id="time">0</span> s
-              </p>
-              <p>
-                Speed click: <span id="speed">0</span> ms
-              </p>
-              <p>
-                Min. time: <span id="min-time">0</span> ms
-              </p>
-              <p>
-                Max. time: <span id="max-time">0</span> ms
-              </p>
-              <p>
-                Mean time: <span id="mean-time">0</span> ms
-              </p>
-              <p>Score: <span id="score">0</span></p>
-              <p>
-                Total score: <span id="total-score">0</span>
-              </p>
+              <h2 class="title">Results</h2>
+
+              <ul>
+                <li>
+                  Counter: <span id="counter">0</span>
+                </li>
+                <li>
+                  Total time
+                  <span id="total-time">0</span> s
+                </li>
+                <li>
+                  Time to click <span id="time">0</span> s
+                </li>
+                <li>
+                  Speed click: <span id="speed">0</span> ms
+                </li>
+                <li>
+                  Min. time: <span id="min-time">0</span> ms
+                </li>
+                <li>
+                  Max. time: <span id="max-time">0</span> ms
+                </li>
+                <li>
+                  Mean time:
+                  <span id="mean-time">0</span> ms
+                </li>
+                <li>Score: <span id="score">0</span></li>
+                <li>
+                  Total score:
+                  <span id="total-score">0</span>
+                </li>
+              </ul>
+            </div>
+
+            <div class="modal">
+              <h2 class="title">
+                Your finaly results in this game:
+              </h2>
+
+              <ul>
+                <li class="modal-item">
+                  <span>Total clicks: </span>
+                  <span id="modal-counter">0</span>
+                </li>
+                <li class="modal-item">
+                  <span>Total game time: </span>
+                  <span>
+                    <span id="modal-total-time">0</span>
+                    s</span
+                  >
+                </li>
+                <li class="modal-item">
+                  <span>Best time reaction: </span>
+                  <span>
+                    <span id="modal-min-time">0</span> ms
+                  </span>
+                </li>
+                <li class="modal-item">
+                  <span>Worst time reaction: </span>
+                  <span>
+                    <span id="modal-max-time">0</span> ms
+                  </span>
+                </li>
+                <li class="modal-item">
+                  <span>Mean time reaction: </span>
+                  <span>
+                    <span id="modal-mean-time">0</span>
+                    ms</span
+                  >
+                </li>
+                <li class="modal-item">
+                  <span>Total score: </span>
+                  <span id="modal-total-score">0</span>
+                </li>
+              </ul>
             </div>
           </div>
         </div>

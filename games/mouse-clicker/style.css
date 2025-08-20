@@ -19,6 +19,7 @@ main,
 }
 
 .flex-wrapper {
+  position: relative;
   height: 100%;
 }
 
@@ -37,6 +38,14 @@ main,
   background-color: beige;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.title {
+  margin-bottom: 12px;
+
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
 }
 
 .start-btn {
@@ -69,4 +78,23 @@ main,
   to {
     transform: scale(10);
   }
+}
+
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 40px;
+
+  border: 1px solid #ccc;
+  border-radius: 4px;
+
+  background-color: azure;
+}
+
+.modal-item {
+  display: flex;
+  justify-content: space-between;
 }
