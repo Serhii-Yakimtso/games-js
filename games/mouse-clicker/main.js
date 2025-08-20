@@ -31,10 +31,17 @@ let clickCounter = 0;
 let totalTime = 0;
 // Лічильник  часу до кліку по елементу
 let timeToClick = 0;
-// Максимальний ліміт часу гри
-let totalTimeLimit = 5;
-// Час (швидкість) реагування
+// Час (швидкість) реагування, секунди
 let clickSpeedTime = 0;
+// Найшвидший час реагування
+let minTime = 0;
+// Найдовший час реагування
+let maxTime = 0;
+// Середній час реагування
+let meanTime = 0;
+
+// Максимальний ліміт часу гри, секунди
+let totalTimeLimit = 5;
 
 const arrTime = [];
 
@@ -52,21 +59,24 @@ const restartBtnMarkUp =
   "<button type='button' id='restart-btn' class='new-btn btn'>Restart Game</button>";
 
 const handleStartGame = () => {
-  startNeGame();
+  startNewGame();
 };
 
-function startNeGame() {
+function startNewGame() {
   deleteStartBtn();
+
   createRestartBtn();
+
   createClickElement(positionClickElement);
+
   getTotalTimeGame();
+
   updateResults(counterResultsElement, clickCounter);
 
   gameStatus = true;
 }
 
 createStartBtn();
-getAreaSize();
 
 // Створення кнопки "Start Game"
 function createStartBtn() {
@@ -98,14 +108,14 @@ const handleRestartGame = () => {
 
 function restartGame() {
   gameStatus = false;
+
   createLocalHistoryObj();
+
   createStartBtn();
+
   deleteRestartBtn();
-  console.log('cleareResults - do');
-  console.log(meanTimeResultsElement.value);
 
   cleareResults();
-  console.log('cleareResults - done');
 }
 
 // Рендер кнопки "Restart Game"
@@ -162,13 +172,14 @@ function generatePosition(size, radius) {
 
 // Створення елементу кліку
 function createClickElement() {
+  getAreaSize();
+
   generatePosition(areaSize, maxRadius);
 
   const { left, top } = positionClickElement;
 
-  const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
+  areaElement.innerHTML = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
 
-  areaElement.innerHTML = clickElementMarkUp;
   const createElementTime = getTime();
 
   const clickElement = document.querySelector(
@@ -189,20 +200,17 @@ function createClickElement() {
 
     updateResults(speedResultsElement, clickSpeedTime);
 
-    updateResults(
-      minTimeResultsElement,
-      getMinTime(arrTime)
-    );
+    minTime = getMinTime(arrTime);
 
-    updateResults(
-      maxTimeResultsElement,
-      getMaxTime(arrTime)
-    );
+    updateResults(minTimeResultsElement, minTime);
 
-    updateResults(
-      meanTimeResultsElement,
-      getMeanTime(arrTime)
-    );
+    maxTime = getMaxTime(arrTime);
+
+    updateResults(maxTimeResultsElement, maxTime);
+
+    meanTime = getMeanTime(arrTime);
+
+    updateResults(meanTimeResultsElement, meanTime);
 
     clickElement.remove();
 
@@ -306,32 +314,34 @@ function getTimeToClick() {
 
     updateResults(timeToClickElement, timeToClick);
 
-    // if (totalTime >= totalTimeLimit) {
-    //   clearInterval(countineTimeToClick);
-    //   restartGame();
-    // }
-
     if (!gameStatus) {
       clearInterval(countineTimeToClick);
     }
 
     if (currentCount !== clickCounter) {
       clearInterval(countineTimeToClick);
-      timeToClick = 0;
     }
   }, 100);
 }
 
 function cleareResults() {
+  clickCounter = 0;
+  totalTime = 0;
+  timeToClick = 0;
+  clickSpeedTime = 0;
+  minTime = 0;
+  maxTime = 0;
+  meanTime = 0;
+
   arrTime.splice(0, arrTime.length);
 
   updateResults(counterResultsElement, clickCounter);
   updateResults(timeToClickElement, timeToClick);
   updateResults(totalTimeGameElement, totalTime);
   updateResults(speedResultsElement, clickSpeedTime);
-  updateResults(minTimeResultsElement, 0);
-  updateResults(maxTimeResultsElement, 0);
-  updateResults(meanTimeResultsElement, 0);
+  updateResults(minTimeResultsElement, minTime);
+  updateResults(maxTimeResultsElement, maxTime);
+  updateResults(meanTimeResultsElement, meanTime);
 }
 
 function createLocalHistoryObj() {
@@ -340,9 +350,8 @@ function createLocalHistoryObj() {
   obj.clickCounter = clickCounter;
   obj.totalTime = totalTime;
   obj.clickSpeedTime = clickSpeedTime;
-  obj.minTime = minTimeResultsElement.value;
-  obj.maxTime = maxTimeResultsElement.value;
-  obj.meanTime = meanTimeResultsElement.value;
-
-  console.log(obj);
+  obj.minTime = minTime;
+  obj.maxTime = maxTime;
+  obj.meanTime = meanTime;
+  obj.arr = [...arrTime];
 }
