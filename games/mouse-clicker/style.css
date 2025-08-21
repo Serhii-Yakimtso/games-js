@@ -85,6 +85,7 @@ main,
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  z-index: 999;
 
   padding: 40px;
 
@@ -97,4 +98,17 @@ main,
 .modal-item {
   display: flex;
   justify-content: space-between;
+}
+
+.close-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 9999;
+
+  padding: 0;
+
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
 }

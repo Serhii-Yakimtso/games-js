@@ -30,6 +30,7 @@
 
           <div class="flex-wrapper">
             <div id="area" class="area"></div>
+
             <div id="results" class="results">
               <h2 class="title">Results</h2>
 
@@ -65,7 +66,7 @@
               </ul>
             </div>
 
-            <div class="modal">
+            <div id="modal" class="modal hidden">
               <h2 class="title">
                 Your finaly results in this game:
               </h2>
@@ -106,6 +107,12 @@
                   <span id="modal-total-score">0</span>
                 </li>
               </ul>
+
+              <button
+                id="close-btn"
+                type="button"
+                class="btn close-btn"
+              ></button>
             </div>
           </div>
         </div>

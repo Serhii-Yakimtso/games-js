@@ -17,13 +17,33 @@ const maxTimeResultsElement =
 const meanTimeResultsElement =
   document.querySelector('#mean-time');
 
+const modalElement = document.querySelector('#modal');
+const modalCounterElement = document.querySelector(
+  '#modal-counter'
+);
+const modalTotalTimeElement = document.querySelector(
+  '#modal-total-time'
+);
+const modalMinTime = document.querySelector(
+  '#modal-min-time'
+);
+const modalMaxTime = document.querySelector(
+  '#modal-max-time'
+);
+const modalMeanTime = document.querySelector(
+  '#modal-mean-time'
+);
+const modalTotalScore = document.querySelector(
+  '#modal-total-score'
+);
+
+const closeBtnElement =
+  document.querySelector('#close-btn');
+
 // кнопка початку гри
 let startBtnElement = null;
 // кнопка нової гри
 let restartBtnElement = null;
-
-// Статус гри
-let gameStatus = false;
 
 // Лічильник кліків
 let clickCounter = 0;
@@ -42,9 +62,12 @@ let meanTime = 0;
 
 // Максимальний ліміт часу гри, секунди
 let totalTimeLimit = 5;
-
+// Статус гри
+let gameStatus = false;
+// Колекція часу в останій сесії гри
 const arrTime = [];
-
+// Фінальні результати
+const finalyResultsObj = {};
 // максимальний радіус елемента
 const maxRadius = 50;
 // Розмір ігрового поля
@@ -109,7 +132,9 @@ const handleRestartGame = () => {
 function restartGame() {
   gameStatus = false;
 
-  createLocalHistoryObj();
+  createLocalHistoryObj(finalyResultsObj);
+
+  showFinalyResults(modalElement, finalyResultsObj);
 
   createStartBtn();
 
@@ -344,9 +369,7 @@ function cleareResults() {
   updateResults(meanTimeResultsElement, meanTime);
 }
 
-function createLocalHistoryObj() {
-  const obj = {};
-
+function createLocalHistoryObj(obj) {
   obj.clickCounter = clickCounter;
   obj.totalTime = totalTime;
   obj.clickSpeedTime = clickSpeedTime;
@@ -354,4 +377,32 @@ function createLocalHistoryObj() {
   obj.maxTime = maxTime;
   obj.meanTime = meanTime;
   obj.arr = [...arrTime];
+}
+
+function toggleShow(element) {
+  element.classList.toggle('hidden');
+}
+
+closeBtnElement.addEventListener('click', () =>
+  toggleShow(modalElement)
+);
+
+function showFinalyResults(element, obj) {
+  console.log(obj);
+
+  const {
+    clickCounter,
+    totalTime,
+    minTime,
+    maxTime,
+    meanTime,
+  } = obj;
+
+  toggleShow(element);
+
+  updateResults(modalCounterElement, clickCounter);
+  updateResults(modalTotalTimeElement, totalTime);
+  updateResults(modalMinTime, minTime);
+  updateResults(modalMaxTime, maxTime);
+  updateResults(modalMeanTime, meanTime);
 }
