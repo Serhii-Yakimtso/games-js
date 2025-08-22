@@ -16,7 +16,10 @@ const maxTimeResultsElement =
   document.querySelector('#max-time');
 const meanTimeResultsElement =
   document.querySelector('#mean-time');
-
+const startBtnElement =
+  document.querySelector('#start-btn');
+const restartBtnElement =
+  document.querySelector('#restart-btn');
 const modalElement = document.querySelector('#modal');
 const modalCounterElement = document.querySelector(
   '#modal-counter'
@@ -40,10 +43,11 @@ const modalTotalScore = document.querySelector(
 const closeBtnElement =
   document.querySelector('#close-btn');
 
+let clickElement = '';
+
 // кнопка початку гри
-let startBtnElement = null;
+
 // кнопка нової гри
-let restartBtnElement = null;
 
 // Лічильник кліків
 let clickCounter = 0;
@@ -75,20 +79,28 @@ const areaSize = {};
 // Координати створення елементу
 const positionClickElement = {};
 
-// Рендер елементів
-const startBtnMarkUp =
-  "<button type='button' id='start-btn' class='start-btn btn'>Start Game</button>";
-const restartBtnMarkUp =
-  "<button type='button' id='restart-btn' class='new-btn btn'>Restart Game</button>";
-
 const handleStartGame = () => {
   startNewGame();
 };
 
-function startNewGame() {
-  deleteStartBtn();
+startBtnElement.addEventListener('click', handleStartGame);
 
-  createRestartBtn();
+function startNewGame() {
+  toggleShow(startBtnElement);
+
+  startBtnElement.removeEventListener(
+    'click',
+    handleStartGame
+  );
+
+  if (restartBtnElement.classList.contains('hidden')) {
+    toggleShow(restartBtnElement);
+  }
+
+  restartBtnElement.addEventListener(
+    'click',
+    handleRestartGame
+  );
 
   createClickElement(positionClickElement);
 
@@ -99,32 +111,6 @@ function startNewGame() {
   gameStatus = true;
 }
 
-createStartBtn();
-
-// Створення кнопки "Start Game"
-function createStartBtn() {
-  areaElement.innerHTML = startBtnMarkUp;
-
-  startBtnElement = document.querySelector('#start-btn');
-
-  startBtnElement.addEventListener(
-    'click',
-    handleStartGame
-  );
-}
-
-// Видалення кнопки "Start Game"
-function deleteStartBtn() {
-  startBtnElement.removeEventListener(
-    'click',
-    handleStartGame
-  );
-
-  startBtnElement.remove();
-
-  startBtnElement = null;
-}
-
 const handleRestartGame = () => {
   restartGame();
 };
@@ -132,40 +118,27 @@ const handleRestartGame = () => {
 function restartGame() {
   gameStatus = false;
 
+  clickElement.remove();
+
   createLocalHistoryObj(finalyResultsObj);
 
   showFinalyResults(modalElement, finalyResultsObj);
 
-  createStartBtn();
+  toggleShow(startBtnElement);
 
-  deleteRestartBtn();
-
-  cleareResults();
-}
-
-// Рендер кнопки "Restart Game"
-function createRestartBtn() {
-  nav.insertAdjacentHTML('afterend', restartBtnMarkUp);
-
-  restartBtnElement =
-    document.querySelector('#restart-btn');
-
-  restartBtnElement.addEventListener(
+  startBtnElement.addEventListener(
     'click',
-    handleRestartGame
+    handleStartGame
   );
-}
 
-// Видалення кнопки "New Game"
-function deleteRestartBtn() {
+  toggleShow(restartBtnElement);
+
   restartBtnElement.removeEventListener(
     'click',
     handleRestartGame
   );
 
-  restartBtnElement.remove();
-
-  restartBtnElement = null;
+  cleareResults();
 }
 
 // Визначення розміру екрану
@@ -207,9 +180,7 @@ function createClickElement() {
 
   const createElementTime = getTime();
 
-  const clickElement = document.querySelector(
-    '#click-element'
-  );
+  clickElement = document.querySelector('#click-element');
 
   getTimeToClick();
 
@@ -240,9 +211,12 @@ function createClickElement() {
     clickElement.remove();
 
     clickCounter += 1;
+
     updateResults(counterResultsElement, clickCounter);
 
-    createClickElement(positionClickElement);
+    if (gameStatus) {
+      createClickElement(positionClickElement);
+    }
   };
 
   clickElement.addEventListener('click', handleClick);
@@ -317,6 +291,7 @@ function getTotalTimeGame() {
 
     if (totalTime >= totalTimeLimit) {
       clearInterval(countTime);
+
       restartGame();
     }
 
