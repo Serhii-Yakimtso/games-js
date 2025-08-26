@@ -1,6 +1,6 @@
 'use strict';
 
-// Отримання
+// Отримання елементів
 const areaElement = document.querySelector('#area');
 const resultsElement = document.querySelector('#results');
 const counterResultsElement =
@@ -39,15 +39,10 @@ const modalMeanTime = document.querySelector(
 const modalTotalScore = document.querySelector(
   '#modal-total-score'
 );
-
 const closeBtnElement =
   document.querySelector('#close-btn');
 
-let clickElement = '';
-
-// кнопка початку гри
-
-// кнопка нової гри
+let clickElement = null;
 
 // Лічильник кліків
 let clickCounter = 0;
@@ -64,6 +59,11 @@ let maxTime = 0;
 // Середній час реагування
 let meanTime = 0;
 
+// Зміна для інтервалу отримання загального часу гри
+let totalTimeInterval = null;
+// Зміна для інтервалу отримання часу між кліками
+let timeToClickInterval = null;
+
 // Максимальний ліміт часу гри, секунди
 let totalTimeLimit = 5;
 // Статус гри
@@ -79,66 +79,51 @@ const areaSize = {};
 // Координати створення елементу
 const positionClickElement = {};
 
-const handleStartGame = () => {
+startBtnElement.addEventListener('click', () => {
   startNewGame();
-};
+});
 
-startBtnElement.addEventListener('click', handleStartGame);
+restartBtnElement.addEventListener('click', () => {
+  finishGame();
+});
 
+closeBtnElement.addEventListener('click', () => {
+  hideElement(modalElement);
+
+  showElement(startBtnElement);
+});
+
+// Початок нової гри
 function startNewGame() {
-  toggleShow(startBtnElement);
+  cleareResults();
 
-  startBtnElement.removeEventListener(
-    'click',
-    handleStartGame
-  );
+  hideElement(startBtnElement);
 
-  if (restartBtnElement.classList.contains('hidden')) {
-    toggleShow(restartBtnElement);
-  }
-
-  restartBtnElement.addEventListener(
-    'click',
-    handleRestartGame
-  );
+  showElement(restartBtnElement);
 
   createClickElement(positionClickElement);
 
   getTotalTimeGame();
 
-  updateResults(counterResultsElement, clickCounter);
-
   gameStatus = true;
 }
 
-const handleRestartGame = () => {
-  restartGame();
-};
-
-function restartGame() {
+function finishGame() {
   gameStatus = false;
+
+  clearInterval(totalTimeInterval);
+  clearInterval(timeToClickInterval);
 
   clickElement.remove();
 
   createLocalHistoryObj(finalyResultsObj);
 
-  showFinalyResults(modalElement, finalyResultsObj);
+  showFinalyResults(finalyResultsObj);
 
-  toggleShow(startBtnElement);
+  hideElement(restartBtnElement);
+  showElement(modalElement);
 
-  startBtnElement.addEventListener(
-    'click',
-    handleStartGame
-  );
-
-  toggleShow(restartBtnElement);
-
-  restartBtnElement.removeEventListener(
-    'click',
-    handleRestartGame
-  );
-
-  cleareResults();
+  // cleareResults();
 }
 
 // Визначення розміру екрану
@@ -176,7 +161,12 @@ function createClickElement() {
 
   const { left, top } = positionClickElement;
 
-  areaElement.innerHTML = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
+  const clickElementMarkUp = `<div id='click-element' class='click-element' style='left: ${left}px; top: ${top}px'></div>`;
+
+  areaElement.insertAdjacentHTML(
+    'beforeend',
+    clickElementMarkUp
+  );
 
   const createElementTime = getTime();
 
@@ -220,6 +210,107 @@ function createClickElement() {
   };
 
   clickElement.addEventListener('click', handleClick);
+}
+
+// Отримання загального часу гри
+function getTotalTimeGame() {
+  const startTimeGame = Date.now();
+
+  totalTimeInterval = setInterval(() => {
+    totalTime = (
+      Math.round(Date.now() - startTimeGame) / 1000
+    ).toFixed(1);
+
+    updateResults(totalTimeGameElement, totalTime);
+
+    if (totalTime >= totalTimeLimit) {
+      finishGame();
+    }
+
+    // if (!gameStatus) {
+    //   finishGame();
+    // }
+  }, 100);
+}
+
+// Отримання  часу між кліками
+function getTimeToClick() {
+  if (timeToClickInterval) {
+    clearInterval(timeToClickInterval);
+  }
+
+  const createElementTime = Date.now();
+
+  const currentCount = clickCounter;
+
+  timeToClickInterval = setInterval(() => {
+    timeToClick = (
+      Math.round(Date.now() - createElementTime) / 1000
+    ).toFixed(1);
+
+    console.log('getTimeToClick');
+
+    if (!gameStatus) {
+      finishGame();
+    }
+
+    // if (currentCount !== clickCounter) {
+    //   finishGame();
+    // }
+
+    updateResults(timeToClickElement, timeToClick);
+  }, 100);
+}
+
+// Очистка результатів
+function cleareResults() {
+  clickCounter = 0;
+  totalTime = 0;
+  timeToClick = 0;
+  clickSpeedTime = 0;
+  minTime = 0;
+  maxTime = 0;
+  meanTime = 0;
+
+  arrTime.splice(0, arrTime.length);
+
+  updateResults(counterResultsElement, clickCounter);
+  updateResults(timeToClickElement, timeToClick);
+  updateResults(totalTimeGameElement, totalTime);
+  updateResults(speedResultsElement, clickSpeedTime);
+  updateResults(minTimeResultsElement, minTime);
+  updateResults(maxTimeResultsElement, maxTime);
+  updateResults(meanTimeResultsElement, meanTime);
+}
+
+// наповнення обїєкту для localStorage
+function createLocalHistoryObj(obj) {
+  obj.clickCounter = clickCounter;
+  obj.totalTime = totalTime;
+  obj.clickSpeedTime = clickSpeedTime;
+  obj.minTime = minTime;
+  obj.maxTime = maxTime;
+  obj.meanTime = meanTime;
+  obj.arr = [...arrTime];
+}
+
+// Відображення модального вікна із фінальними результатами
+function showFinalyResults(obj) {
+  console.log(obj);
+
+  const {
+    clickCounter,
+    totalTime,
+    minTime,
+    maxTime,
+    meanTime,
+  } = obj;
+
+  updateResults(modalCounterElement, clickCounter);
+  updateResults(modalTotalTimeElement, totalTime);
+  updateResults(modalMinTime, minTime);
+  updateResults(modalMaxTime, maxTime);
+  updateResults(modalMeanTime, meanTime);
 }
 
 // оновлення значення елементу
@@ -278,106 +369,12 @@ function getMaxTime(arr) {
   return Math.max(...arr);
 }
 
-// Отримання загального часу гри
-function getTotalTimeGame() {
-  const startTimeGame = Date.now();
-
-  const countTime = setInterval(() => {
-    totalTime = (
-      Math.round(Date.now() - startTimeGame) / 1000
-    ).toFixed(1);
-
-    updateResults(totalTimeGameElement, totalTime);
-
-    if (totalTime >= totalTimeLimit) {
-      clearInterval(countTime);
-
-      restartGame();
-    }
-
-    if (!gameStatus) {
-      clearInterval(countTime);
-    }
-  }, 100);
+// Відображування елементу
+function showElement(element) {
+  element.classList.remove('hidden');
 }
 
-// Отримання  часу між кліками
-function getTimeToClick() {
-  const createElementTime = Date.now();
-
-  const currentCount = clickCounter;
-
-  const countineTimeToClick = setInterval(() => {
-    timeToClick = (
-      Math.round(Date.now() - createElementTime) / 1000
-    ).toFixed(1);
-
-    updateResults(timeToClickElement, timeToClick);
-
-    if (!gameStatus) {
-      clearInterval(countineTimeToClick);
-    }
-
-    if (currentCount !== clickCounter) {
-      clearInterval(countineTimeToClick);
-    }
-  }, 100);
-}
-
-function cleareResults() {
-  clickCounter = 0;
-  totalTime = 0;
-  timeToClick = 0;
-  clickSpeedTime = 0;
-  minTime = 0;
-  maxTime = 0;
-  meanTime = 0;
-
-  arrTime.splice(0, arrTime.length);
-
-  updateResults(counterResultsElement, clickCounter);
-  updateResults(timeToClickElement, timeToClick);
-  updateResults(totalTimeGameElement, totalTime);
-  updateResults(speedResultsElement, clickSpeedTime);
-  updateResults(minTimeResultsElement, minTime);
-  updateResults(maxTimeResultsElement, maxTime);
-  updateResults(meanTimeResultsElement, meanTime);
-}
-
-function createLocalHistoryObj(obj) {
-  obj.clickCounter = clickCounter;
-  obj.totalTime = totalTime;
-  obj.clickSpeedTime = clickSpeedTime;
-  obj.minTime = minTime;
-  obj.maxTime = maxTime;
-  obj.meanTime = meanTime;
-  obj.arr = [...arrTime];
-}
-
-function toggleShow(element) {
-  element.classList.toggle('hidden');
-}
-
-closeBtnElement.addEventListener('click', () =>
-  toggleShow(modalElement)
-);
-
-function showFinalyResults(element, obj) {
-  console.log(obj);
-
-  const {
-    clickCounter,
-    totalTime,
-    minTime,
-    maxTime,
-    meanTime,
-  } = obj;
-
-  toggleShow(element);
-
-  updateResults(modalCounterElement, clickCounter);
-  updateResults(modalTotalTimeElement, totalTime);
-  updateResults(modalMinTime, minTime);
-  updateResults(modalMaxTime, maxTime);
-  updateResults(modalMeanTime, meanTime);
+// скриття елементу
+function hideElement(element) {
+  element.classList.add('hidden');
 }
