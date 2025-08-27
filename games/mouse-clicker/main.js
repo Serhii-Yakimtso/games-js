@@ -18,31 +18,81 @@ const meanTimeResultsElement =
   document.querySelector('#mean-time');
 const startBtnElement =
   document.querySelector('#start-btn');
-const restartBtnElement =
-  document.querySelector('#restart-btn');
-const modalElement = document.querySelector('#modal');
-const modalCounterElement = document.querySelector(
-  '#modal-counter'
-);
-const modalTotalTimeElement = document.querySelector(
-  '#modal-total-time'
-);
-const modalMinTime = document.querySelector(
-  '#modal-min-time'
-);
-const modalMaxTime = document.querySelector(
-  '#modal-max-time'
-);
-const modalMeanTime = document.querySelector(
-  '#modal-mean-time'
-);
-const modalTotalScore = document.querySelector(
-  '#modal-total-score'
-);
-const closeBtnElement =
-  document.querySelector('#close-btn');
+const stopBtnElement = document.querySelector('#stop-btn');
 
+const settingsBtnElement =
+  document.querySelector('#settings-btn');
+const modalSettingsElement = document.querySelector(
+  '#modal-settings'
+);
+const settingsFormElement = document.querySelector(
+  '#settings-form'
+);
+const settingCounterInput = document.querySelector(
+  '#setting-counter'
+);
+const settingCounterUnlimitInput = document.querySelector(
+  '#setting-counter-unlimit'
+);
+const settingTotalTimeInput = document.querySelector(
+  '#setting-total-time'
+);
+const settingTotalTimeUnlimitInput = document.querySelector(
+  '#setting-total-time-unlimit'
+);
+const settingClickTimeInput = document.querySelector(
+  '#setting-click-time'
+);
+const settingClickTimeUnlimitInput = document.querySelector(
+  '#setting-click-time-unlimit'
+);
+const settingApproveBtnElement = document.querySelector(
+  '#settings-approve-btn'
+);
+const settingResetBtnElement = document.querySelector(
+  '#settings-reset-btn'
+);
+const settingCancelBtnElement = document.querySelector(
+  '#settings-cancel-btn'
+);
+
+const modalResultsElement = document.querySelector(
+  '#modal-results'
+);
+const modalResultsCounterElement = document.querySelector(
+  '#modal-results-counter'
+);
+const modalResultsTotalTimeElement = document.querySelector(
+  '#modal-results-total-time'
+);
+const modalResultsMinTime = document.querySelector(
+  '#modal-results-min-time'
+);
+const modalResultsMaxTime = document.querySelector(
+  '#modal-results-max-time'
+);
+const modalResultsMeanTime = document.querySelector(
+  '#modal-results-mean-time'
+);
+const modalResultsTotalScore = document.querySelector(
+  '#modal-results-total-score'
+);
+const modalResultsCloseBtnElement = document.querySelector(
+  '#modal-results-close-btn'
+);
 let clickElement = null;
+
+// const settingsDefault = {
+//   settingCounterInput: true,
+//   settingCounterInputValue: '',
+//   settingCounterUnlimitInput: true,
+//   settingTotalTimeInput: false,
+//   settingTotalTimeInputValue: 30,
+//   settingTotalTimeUnlimitInput: false,
+//   settingClickTimeInput: true,
+//   settingClickTimeInputValue: '',
+//   settingClickTimeUnlimitInput: true,
+// };
 
 // Лічильник кліків
 let clickCounter = 0;
@@ -79,19 +129,89 @@ const areaSize = {};
 // Координати створення елементу
 const positionClickElement = {};
 
-startBtnElement.addEventListener('click', () => {
-  startNewGame();
-});
+initEvents();
 
-restartBtnElement.addEventListener('click', () => {
-  finishGame();
-});
+function initEvents() {
+  startBtnElement.addEventListener('click', () => {
+    startNewGame();
+  });
 
-closeBtnElement.addEventListener('click', () => {
-  hideElement(modalElement);
+  stopBtnElement.addEventListener('click', () => {
+    finishGame();
+  });
 
-  showElement(startBtnElement);
-});
+  modalResultsCloseBtnElement.addEventListener(
+    'click',
+    () => {
+      hideElement(modalResultsElement);
+
+      showElement(startBtnElement);
+    }
+  );
+
+  settingsBtnElement.addEventListener('click', () => {
+    if (modalSettingsElement.classList.contains('hidden')) {
+      showElement(modalSettingsElement);
+      hideElement(startBtnElement);
+    } else {
+      hideElement(modalSettingsElement);
+      showElement(startBtnElement);
+    }
+  });
+
+  settingCounterUnlimitInput.addEventListener(
+    'change',
+    () => {
+      toggleActiveInput(
+        settingCounterUnlimitInput,
+        settingCounterInput
+      );
+    }
+  );
+  settingTotalTimeUnlimitInput.addEventListener(
+    'change',
+    () => {
+      toggleActiveInput(
+        settingTotalTimeUnlimitInput,
+        settingTotalTimeInput
+      );
+    }
+  );
+  settingClickTimeUnlimitInput.addEventListener(
+    'change',
+    () => {
+      toggleActiveInput(
+        settingClickTimeUnlimitInput,
+        settingClickTimeInput
+      );
+    }
+  );
+
+  settingApproveBtnElement.addEventListener('click', () => {
+    settingsFormElement.reset();
+  });
+
+  settingResetBtnElement.addEventListener('click', () => {
+    settingCounterInput.disabled = true;
+    settingTotalTimeInput.disabled = false;
+    settingClickTimeInput.disabled = true;
+  });
+
+  settingCancelBtnElement.addEventListener('click', () => {
+    showElement(startBtnElement);
+    hideElement(modalSettingsElement);
+  });
+}
+
+// Перемикання інпутів
+function toggleActiveInput(checkbox, fieldInput) {
+  if (checkbox.checked) {
+    fieldInput.value = '';
+    fieldInput.disabled = true;
+  } else {
+    fieldInput.disabled = false;
+  }
+}
 
 // Початок нової гри
 function startNewGame() {
@@ -99,7 +219,7 @@ function startNewGame() {
 
   hideElement(startBtnElement);
 
-  showElement(restartBtnElement);
+  showElement(stopBtnElement);
 
   createClickElement(positionClickElement);
 
@@ -120,8 +240,8 @@ function finishGame() {
 
   showFinalyResults(finalyResultsObj);
 
-  hideElement(restartBtnElement);
-  showElement(modalElement);
+  hideElement(stopBtnElement);
+  showElement(modalResultsElement);
 
   // cleareResults();
 }
@@ -223,6 +343,8 @@ function getTotalTimeGame() {
 
     updateResults(totalTimeGameElement, totalTime);
 
+    // console.log('totalTimeInterval');
+
     if (totalTime >= totalTimeLimit) {
       finishGame();
     }
@@ -248,7 +370,7 @@ function getTimeToClick() {
       Math.round(Date.now() - createElementTime) / 1000
     ).toFixed(1);
 
-    console.log('getTimeToClick');
+    // console.log('getTimeToClick');
 
     if (!gameStatus) {
       finishGame();
@@ -306,11 +428,11 @@ function showFinalyResults(obj) {
     meanTime,
   } = obj;
 
-  updateResults(modalCounterElement, clickCounter);
-  updateResults(modalTotalTimeElement, totalTime);
-  updateResults(modalMinTime, minTime);
-  updateResults(modalMaxTime, maxTime);
-  updateResults(modalMeanTime, meanTime);
+  updateResults(modalResultsCounterElement, clickCounter);
+  updateResults(modalResultsTotalTimeElement, totalTime);
+  updateResults(modalResultsMinTime, minTime);
+  updateResults(modalResultsMaxTime, maxTime);
+  updateResults(modalResultsMeanTime, meanTime);
 }
 
 // оновлення значення елементу

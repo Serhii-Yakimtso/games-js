@@ -24,12 +24,119 @@
 
             <button
               type="button"
-              id="restart-btn"
-              class="new-btn btn hidden"
+              id="stop-btn"
+              class="btn hidden"
             >
-              Restart Game
+              Stop game
             </button>
           </nav>
+
+          <button
+            type="button"
+            id="settings-btn"
+            class="btn"
+          >
+            Settings
+          </button>
+
+          <div id="modal-settings" class="modal">
+            <h2 class="title">Settings</h2>
+
+            <form id="settings-form" class="form">
+              <!-- Counter limit -->
+              <fieldset class="fieldset">
+                <legend>Counter limit</legend>
+                <input
+                  class="input"
+                  id="setting-counter"
+                  type="number"
+                  min="0"
+                  step="1"
+                  name="setting-counter"
+                  value=""
+                  disabled
+                />
+                <label
+                  ><input
+                    id="setting-counter-unlimit"
+                    type="checkbox"
+                    value="unlimit"
+                    checked
+                  />Unlimit</label
+                >
+              </fieldset>
+
+              <!-- Total time limit -->
+              <fieldset class="fieldset">
+                <legend>Total time limit, s</legend>
+                <input
+                  class="input"
+                  id="setting-total-time"
+                  type="number"
+                  min="0"
+                  step="any"
+                  name="setting-total-time"
+                  value="30"
+                />
+                <label
+                  ><input
+                    id="setting-total-time-unlimit"
+                    type="checkbox"
+                    value="unlimit"
+                  />Unlimit</label
+                >
+              </fieldset>
+
+              <!-- Time between clicks limit -->
+              <fieldset class="fieldset">
+                <legend>
+                  Time between clicks limit, s
+                </legend>
+                <input
+                  class="input"
+                  id="setting-click-time"
+                  type="number"
+                  min="0"
+                  step="any"
+                  name="setting-click-time"
+                  value=""
+                  disabled
+                />
+                <label
+                  ><input
+                    id="setting-click-time-unlimit"
+                    type="checkbox"
+                    value="unlimit"
+                    checked
+                  />Unlimit</label
+                >
+              </fieldset>
+
+              <div class="form-btn-wrapper">
+                <button
+                  id="settings-approve-btn"
+                  class="btn"
+                  type="button"
+                >
+                  Ok
+                </button>
+                <button
+                  id="settings-reset-btn"
+                  class="btn"
+                  type="reset"
+                >
+                  Reset
+                </button>
+                <button
+                  id="settings-cancel-btn"
+                  class="btn"
+                  type="button"
+                >
+                  Cancel
+                </button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </header>
@@ -84,7 +191,7 @@
               </ul>
             </div>
 
-            <div id="modal" class="modal hidden">
+            <div id="modal-results" class="modal hidden">
               <h2 class="title">
                 Your finaly results in this game:
               </h2>
@@ -92,42 +199,54 @@
               <ul>
                 <li class="modal-item">
                   <span>Total clicks: </span>
-                  <span id="modal-counter">0</span>
+                  <span id="modal-results-counter">0</span>
                 </li>
                 <li class="modal-item">
                   <span>Total game time: </span>
                   <span>
-                    <span id="modal-total-time">0</span>
+                    <span id="modal-results-total-time"
+                      >0</span
+                    >
                     s</span
                   >
                 </li>
                 <li class="modal-item">
                   <span>Best time reaction: </span>
                   <span>
-                    <span id="modal-min-time">0</span> ms
+                    <span id="modal-results-min-time"
+                      >0</span
+                    >
+                    ms
                   </span>
                 </li>
                 <li class="modal-item">
                   <span>Worst time reaction: </span>
                   <span>
-                    <span id="modal-max-time">0</span> ms
+                    <span id="modal-results-max-time"
+                      >0</span
+                    >
+                    ms
                   </span>
                 </li>
                 <li class="modal-item">
                   <span>Mean time reaction: </span>
                   <span>
-                    <span id="modal-mean-time">0</span>
+                    <span id="modal-results-mean-time"
+                      >0</span
+                    >
                     ms</span
                   >
                 </li>
                 <li class="modal-item">
                   <span>Total score: </span>
-                  <span id="modal-total-score">0</span>
+                  <span id="modal-results-total-score"
+                    >0</span
+                  >
                 </li>
               </ul>
 
               <button
-                id="close-btn"
+                id="modal-results-close-btn"
                 type="button"
                 class="btn close-btn"
               ></button>
