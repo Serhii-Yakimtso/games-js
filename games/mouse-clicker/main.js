@@ -94,6 +94,8 @@ let clickElement = null;
 //   settingClickTimeUnlimitInput: true,
 // };
 
+const settingsObj = {};
+
 // Лічильник кліків
 let clickCounter = 0;
 // Лічильник загального часу гри
@@ -188,7 +190,11 @@ function initEvents() {
   );
 
   settingApproveBtnElement.addEventListener('click', () => {
-    settingsFormElement.reset();
+    settingsObj.counterLimit = settingCounterInput.value;
+    settingsObj.clickTimeLimit =
+      settingClickTimeInput.value;
+    settingsObj.totalTimeLimit =
+      settingTotalTimeInput.value;
   });
 
   settingResetBtnElement.addEventListener('click', () => {
