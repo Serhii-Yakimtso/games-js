@@ -94,8 +94,6 @@ let clickElement = null;
 //   settingClickTimeUnlimitInput: true,
 // };
 
-const settingsObj = {};
-
 // Лічильник кліків
 let clickCounter = 0;
 // Лічильник загального часу гри
@@ -115,6 +113,12 @@ let meanTime = 0;
 let totalTimeInterval = null;
 // Зміна для інтервалу отримання часу між кліками
 let timeToClickInterval = null;
+
+const settingsObj = {
+  totalTimeLimit: null,
+  clickTimeLimit: null,
+  counterLimit: null,
+};
 
 // Максимальний ліміт часу гри, секунди
 let totalTimeLimit = 5;
@@ -190,11 +194,8 @@ function initEvents() {
   );
 
   settingApproveBtnElement.addEventListener('click', () => {
-    settingsObj.counterLimit = settingCounterInput.value;
-    settingsObj.clickTimeLimit =
-      settingClickTimeInput.value;
-    settingsObj.totalTimeLimit =
-      settingTotalTimeInput.value;
+    // settingsFormElement.reset();
+    setSettings(settingsObj);
   });
 
   settingResetBtnElement.addEventListener('click', () => {
@@ -217,6 +218,44 @@ function toggleActiveInput(checkbox, fieldInput) {
   } else {
     fieldInput.disabled = false;
   }
+}
+
+// Передача налаштувань
+function setSettings(obj) {
+  if (!settingCounterUnlimitInput.checked) {
+    obj.counterLimit = checkSettingsValue(
+      settingCounterInput
+    );
+  } else {
+    obj.counterLimit = null;
+  }
+
+  if (!settingTotalTimeUnlimitInput.checked) {
+    obj.totalTimeLimit = checkSettingsValue(
+      settingTotalTimeInput
+    );
+  } else {
+    obj.totalTimeLimit = null;
+  }
+
+  if (!settingClickTimeUnlimitInput.checked) {
+    obj.clickTimeLimit = checkSettingsValue(
+      settingClickTimeInput
+    );
+  } else {
+    obj.clickTimeLimit = null;
+  }
+}
+
+// Перевірка значення налаштувань
+function checkSettingsValue(element) {
+  let value = Number.parseFloat(element.value);
+
+  if (Number.isNaN(value)) {
+    return 0;
+  }
+
+  return value;
 }
 
 // Початок нової гри

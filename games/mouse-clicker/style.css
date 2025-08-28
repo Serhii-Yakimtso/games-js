@@ -18,6 +18,35 @@ main,
   justify-content: space-between;
 }
 
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.fieldset {
+  display: flex;
+  gap: 12px;
+  align-items: baseline;
+}
+
+.input {
+  background-color: white;
+  border-radius: 4px;
+  padding: 4px;
+  line-height: 100%;
+}
+
+.input:disabled {
+  background-color: transparent;
+}
+
+.form-btn-wrapper {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
 .flex-wrapper {
   position: relative;
   height: 100%;
