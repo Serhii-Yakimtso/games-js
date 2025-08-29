@@ -115,13 +115,13 @@ let totalTimeInterval = null;
 let timeToClickInterval = null;
 
 const settingsObj = {
-  totalTimeLimit: null,
+  totalTimeLimit: 30,
   clickTimeLimit: null,
   counterLimit: null,
 };
 
 // Максимальний ліміт часу гри, секунди
-let totalTimeLimit = 5;
+// let totalTimeLimit = 5;
 // Статус гри
 let gameStatus = false;
 // Колекція часу в останій сесії гри
@@ -152,6 +152,8 @@ function initEvents() {
       hideElement(modalResultsElement);
 
       showElement(startBtnElement);
+
+      showElement(settingsBtnElement);
     }
   );
 
@@ -194,8 +196,13 @@ function initEvents() {
   );
 
   settingApproveBtnElement.addEventListener('click', () => {
-    // settingsFormElement.reset();
+    console.log(settingsObj);
+
     setSettings(settingsObj);
+    showElement(startBtnElement);
+    hideElement(modalSettingsElement);
+
+    console.log(settingsObj);
   });
 
   settingResetBtnElement.addEventListener('click', () => {
@@ -263,6 +270,8 @@ function startNewGame() {
   cleareResults();
 
   hideElement(startBtnElement);
+
+  hideElement(settingsBtnElement);
 
   showElement(stopBtnElement);
 
@@ -369,6 +378,13 @@ function createClickElement() {
 
     updateResults(counterResultsElement, clickCounter);
 
+    if (
+      settingsObj.counterLimit &&
+      clickCounter === settingsObj.counterLimit
+    ) {
+      finishGame();
+    }
+
     if (gameStatus) {
       createClickElement(positionClickElement);
     }
@@ -390,7 +406,10 @@ function getTotalTimeGame() {
 
     // console.log('totalTimeInterval');
 
-    if (totalTime >= totalTimeLimit) {
+    if (
+      settingsObj.totalTimeLimit &&
+      totalTime >= settingsObj.totalTimeLimit
+    ) {
       finishGame();
     }
 
@@ -408,7 +427,7 @@ function getTimeToClick() {
 
   const createElementTime = Date.now();
 
-  const currentCount = clickCounter;
+  // const currentCount = clickCounter;
 
   timeToClickInterval = setInterval(() => {
     timeToClick = (
@@ -416,6 +435,13 @@ function getTimeToClick() {
     ).toFixed(1);
 
     // console.log('getTimeToClick');
+
+    if (
+      settingsObj.clickTimeLimit &&
+      timeToClick >= settingsObj.clickTimeLimit
+    ) {
+      finishGame();
+    }
 
     if (!gameStatus) {
       finishGame();
