@@ -60,13 +60,18 @@ main,
   border-radius: 4px;
 }
 
-.results {
-  height: 100%;
+.results,
+.limits {
+  /* height: 100%; */
 
   padding: 8px;
   background-color: beige;
   border: 1px solid #ccc;
   border-radius: 4px;
+}
+
+.results {
+  margin-bottom: 12px;
 }
 
 .title {

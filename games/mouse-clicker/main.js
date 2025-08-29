@@ -136,6 +136,7 @@ const areaSize = {};
 const positionClickElement = {};
 
 initEvents();
+setLimitInfoBar(settingsObj);
 
 function initEvents() {
   startBtnElement.addEventListener('click', () => {
@@ -199,6 +200,7 @@ function initEvents() {
     console.log(settingsObj);
 
     setSettings(settingsObj);
+    setLimitInfoBar(settingsObj);
     showElement(startBtnElement);
     hideElement(modalSettingsElement);
 
@@ -263,6 +265,33 @@ function checkSettingsValue(element) {
   }
 
   return value;
+}
+
+function setLimitInfoBar(obj) {
+  const { totalTimeLimit, clickTimeLimit, counterLimit } =
+    obj;
+
+  const infoCounter = document.querySelector(
+    '#limit-info-counter'
+  );
+  const infoTotalTime = document.querySelector(
+    '#limit-info-total-time'
+  );
+  const infoClickTime = document.querySelector(
+    '#limit-info-click-time'
+  );
+
+  infoCounter.textContent = counterLimit
+    ? counterLimit
+    : 'unlimit';
+
+  infoTotalTime.textContent = totalTimeLimit
+    ? totalTimeLimit
+    : 'unlimit';
+
+  infoClickTime.textContent = clickTimeLimit
+    ? clickTimeLimit
+    : 'unlimit';
 }
 
 // Початок нової гри
