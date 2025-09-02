@@ -160,3 +160,18 @@ main,
     display: none;
   }
 }
+
+@media screen and (max-width: 767px) {
+  .modal {
+    padding: 30px;
+    min-width: 280px;
+  }
+
+  .close-btn {
+    top: 12px;
+    right: 12px;
+
+    width: 16px;
+    height: 16px;
+  }
+}
